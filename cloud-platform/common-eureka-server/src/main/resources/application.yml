@@ -1,0 +1,29 @@
+spring:
+  application:
+       name: common-eureka-server   #设置该实例应用名称
+
+server:
+  port: ${PORT:8761}                #eureka服务器端口号
+
+security:                           #开启服务注册认证机制
+   basic:
+      enabled: true                 #开启认证
+   user:
+      name: eureka                  #认证时，使用的用户名
+      password: eureka              #认证时，使用的密码
+
+eureka:
+    instance:
+        hostname: eurekaServer                             #设置实例主机名
+    server:
+        #enableSelfPreservation: false                      #关闭自我保护，开发时使用此设置，在单机调试的时候很容易满足，实际在生产环境上通常是由于网络不稳定导致       
+        #renewalPercentThreshold: 0.49
+    client:
+        #serviceUrl:
+            #defaultZone: http://${security.user.name}:${security.user.password}@$localhost:${server.port}/eureka  #设置eureka服务器所在的地址,查询服务和注册服务都需要依赖这个地址
+        healthcheck:
+            enabled: true                                   #开启健康监控
+        registerWithEureka: false		                    #是否注册自身到eureka服务器，因为当前这个应用就是eureka服务器，没必要注册自身
+        fetchRegistry: false								#是否从eureka服务器获取注册信息，为true时，可以启动，但报异常：Cannot execute request on any known server
+        service-url:
+          defaultZone: http://eureka:eureka@localhost:8761/eureka  #必须加，不能省略，不然在有时候会报错： access denied:
